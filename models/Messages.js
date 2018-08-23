@@ -6,4 +6,4 @@ const messagesSchema = mongoose.Schema({
     time: Number,
 });
 
-module.exports = mongoose.model('Messages', messagesSchema);
+module.exports = mongoose.model('Messages', messagesSchema)
