@@ -3,11 +3,34 @@
   <head>
     <title><%= title %></title>
     <link rel='stylesheet' href='/stylesheets/style.css' />
-    <script src='https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.0.4/socket.io.js'></script>
-    <script src="./javascripts/app.js"></script>
+  
   </head>
   <body>
-    <h1><%= title %></h1>
-    <p>Welcome to <%= title %></p>
+    <div class="chats">
+      <div class="chat">
+        <div class="group">
+          <div class="name">Robby：</div>
+          <div class="msg">Hi~</div>
+        </div>
+        <div class="time">11分鐘前</div>
+      </div>
+      <div class="chat">
+        <div class="group">
+          <div class="name">Robby：</div>
+          <div class="msg">Hola~</div>
+        </div>
+        <div class="time">10分鐘前</div>
+      </div>
+    </div>
+    <div class="message">
+      <input id="name" type="text" placeholder="your name" />
+      <input id="msg" type="text" placeholder="input the message" />
+      <button class="sendbutton" type="button">送出</button>
+    </div>
+    <script src='https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.0.4/socket.io.js'></script>
+    <script src="./javascripts/app.js"></script>
+    <script src='https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.20.1/moment.js'></script>
+    <script src='https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.20.1/locale/zh-tw.js'></script>
   </body>
+
 </html>

@@ -3,32 +3,57 @@ var express = require('express');
 var path = require('path');
 var cookieParser = require('cookie-parser');
 var logger = require('morgan');
+const SocketHander = require('./socket/index');
+
 
 var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/users');
 
 var app = express();
+app.use(function (req, res, next) {
+
+  // Website you wish to allow to connect
+  res.setHeader('Access-Control-Allow-Origin', '*');
+
+  // Request methods you wish to allow
+  res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS, PUT, PATCH, DELETE');
+
+  // Request headers you wish to allow
+  res.setHeader('Access-Control-Allow-Headers', 'X-Requested-With,content-type');
+
+  // Set to true if you need the website to include cookies in the requests sent
+  // to the API (e.g. in case you use sessions)
+  res.setHeader('Access-Control-Allow-Credentials', true);
+
+  // Pass to next layer of middleware
+  next();
+});
 
 
 const server = require('http').Server(app);
-const io = require('socket.io')(server);
-io.on('connection', (socket) => {
+var allowedOrigins = "*:*"
+const io = require('socket.io')(server,{origins:allowedOrigins});
 
+io.on('connection', async (socket) => {
 
+  socketHander = new SocketHander();
 
-  
+  socketHander.connect();
+  const history = await socketHander.getMessages();
+  const  socketid = await socket.id;
+  io.to(socketid).emit('history', history);
+
   socket.on("message", (obj) => {
-    io.emit("message", '應聲蟲:' + obj);
+    socketHander.storeMessages(obj);
+    io.emit("message", obj);
   });
-  console.log('a user connected');
-
-
+  
   socket.on("disconnect", () => {
     console.log("a user go out");
   });
 
 });
-server.listen(3003);
+server.listen(3001);
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
