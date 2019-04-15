@@ -7,7 +7,8 @@
 var app = require('../app');
 var debug = require('debug')('chat:server');
 var http = require('http');
-
+var https = require('https');
+const fs = require('fs')
 /**
  * Get port from environment and store in Express.
  */
@@ -18,8 +19,18 @@ app.set('port', port);
 /**
  * Create HTTP server.
  */
+const keyPath = './config/private.key';
+const certPath = './config/certificate.pem';
+const caPath = './config/ca_bundle.pem'
+const hskey = fs.readFileSync(keyPath).toString();
+const hscert = fs.readFileSync(certPath).toString();
+const ca = fs.readFileSync(caPath).toString();
 
-var server = http.createServer(app);
+const server = https.createServer({
+  key: hskey,
+  cert:hscert,
+  ca:ca
+},app)
 
 /**
  * Listen on provided port, on all network interfaces.

@@ -1,4 +1,4 @@
-socket = io.connect('ws://dandan.tw:3001');
+socket = io.connect('https://dandan.tw:3001',{secure: true});
 
 //send data
 

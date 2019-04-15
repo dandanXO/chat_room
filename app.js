@@ -4,7 +4,8 @@ var path = require('path');
 var cookieParser = require('cookie-parser');
 var logger = require('morgan');
 const SocketHander = require('./socket/index');
-
+var fs = require('fs');
+var https = require('https');
 
 var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/users');
@@ -30,7 +31,26 @@ app.use(function (req, res, next) {
 });
 
 
-const server = require('http').Server(app);
+
+
+
+const keyPath = './config/private.key';
+const certPath = './config/certificate.pem';
+const caPath = './config/ca_bundle.pem'
+const hskey = fs.readFileSync(keyPath).toString();
+const hscert = fs.readFileSync(certPath).toString();
+const ca = fs.readFileSync(caPath).toString();
+var options = {
+  key: hskey,
+  cert: hscert,
+  ca:ca
+};
+const server = https.createServer(options, app);
+server.listen(3001,function(){
+  console.log('wss start on 3001')
+});
+
+
 var allowedOrigins = "*:*"
 const io = require('socket.io')(server,{origins:allowedOrigins});
 
@@ -53,7 +73,6 @@ io.on('connection', async (socket) => {
   });
 
 });
-server.listen(3001);
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
